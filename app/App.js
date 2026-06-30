@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import {
   Alert,
-  Linking,
   Modal,
   Platform,
   Pressable,
@@ -84,7 +83,6 @@ export default function App() {
   const [voiceStatus, setVoiceStatus] = useState("語音連線中…");
   const [micOn, setMicOn] = useState(false);
   const [permsReady, setPermsReady] = useState(false); // 權限都要過後才啟動語音
-  const [needPrecise, setNeedPrecise] = useState(false); // 只拿到大略位置 → 顯示一鍵去設定
 
   const [meeting, initMeeting] = useRealtimeKitClient();
   const webRef = useRef(null);
@@ -165,10 +163,7 @@ export default function App() {
       console.log("[權限] status:", perm, "android.accuracy:", androidAccuracy);
       if (perm === "granted") {
         if (androidAccuracy === "coarse") {
-          setStatus("只拿到『大略位置』權限 → 點下方按鈕開啟『精確位置』");
-          setNeedPrecise(true);
-        } else {
-          setNeedPrecise(false);
+          setStatus("只拿到『大略位置』權限（請重裝後授權精確位置）");
         }
         // 0) 確認定位服務開著；Android 主動請求切換到「高精準度」模式
         //    （手機定位模式只用網路 → 戶外也不準，這是最常見原因）
@@ -335,15 +330,6 @@ export default function App() {
         <Text style={styles.bannerSub}>在線 {count} 台</Text>
       </View>
 
-      {/* 只拿到大略位置時：一鍵帶去系統設定開啟精確位置 */}
-      {needPrecise && (
-        <Pressable style={styles.preciseBtn} onPress={() => Linking.openSettings()}>
-          <Text style={styles.preciseText}>
-            ⚠️ 定位不準？點我開啟「精確位置」
-          </Text>
-        </Pressable>
-      )}
-
       {/* 語音狀態 + 開麥/靜音 */}
       <Pressable
         onPress={toggleMic}
@@ -404,17 +390,6 @@ const styles = StyleSheet.create({
   },
   bannerText: { color: "#fff", fontSize: 14, fontWeight: "600" },
   bannerSub: { color: "#9ae6b4", fontSize: 13 },
-  preciseBtn: {
-    position: "absolute",
-    top: 96,
-    left: 16,
-    right: 16,
-    backgroundColor: "#dd6b20",
-    borderRadius: 10,
-    paddingVertical: 10,
-    paddingHorizontal: 14,
-  },
-  preciseText: { color: "#fff", fontSize: 14, fontWeight: "700", textAlign: "center" },
   voiceBar: {
     position: "absolute",
     bottom: 36,
