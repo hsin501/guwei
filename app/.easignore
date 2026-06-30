@@ -1,0 +1,12 @@
+# EAS 打包時用這個檔決定要排除哪些檔案（存在時優先於 .gitignore）。
+# 重點：這裡「不」排除 .env，且用 ! 強制帶上，
+# 否則打包出來的 APK 會讀不到 EXPO_PUBLIC_SERVER_URL，連不到伺服器。
+
+node_modules/
+.expo/
+dist/
+*.log
+.DS_Store
+
+# 強制把 .env 一起上傳（即使它被 .gitignore 忽略）
+!.env

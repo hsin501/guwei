@@ -1,0 +1,38 @@
+{
+  "expo": {
+    "name": "聚位 GPS 測試",
+    "slug": "juwei-gps-mvp",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": false,
+    "android": {
+      "package": "com.juwei.gpsmvp",
+      "permissions": [
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION"
+      ]
+    },
+    "ios": {
+      "bundleIdentifier": "com.juwei.gpsmvp",
+      "supportsTablet": true
+    },
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "聚位 APP 需要你的位置，才能讓主辦與車友在地圖上看到彼此。"
+        }
+      ],
+      "expo-asset",
+      "expo-audio",
+      "@cloudflare/react-native-webrtc",
+      "@cloudflare/realtimekit-react-native"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "390946e7-8a2f-4e3b-8049-221c553418a8"
+      }
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "juwei-gps-server",
+  "version": "0.1.0",
+  "description": "聚位 APP MVP - 即時 GPS 位置廣播伺服器",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node --env-file=.env index.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "livekit-server-sdk": "^2.15.5",
+    "socket.io": "^4.7.5"
+  }
+}
