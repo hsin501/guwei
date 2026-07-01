@@ -27,7 +27,8 @@
       "expo-asset",
       "expo-audio",
       "@cloudflare/react-native-webrtc",
-      "@cloudflare/realtimekit-react-native"
+      "@cloudflare/realtimekit-react-native",
+      "./plugins/withFineLocationFix.js"
     ],
     "extra": {
       "eas": {

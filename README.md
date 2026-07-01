@@ -147,6 +147,17 @@ eas build -p android --profile preview
 | 地圖 | WebView 內嵌 Leaflet + CartoDB 圖磚 | `app/App.js`（`LEAFLET_HTML`） |
 | 監控台 | 伺服器 `/voice` 直接吐一頁 Leaflet + RealtimeKit 的 HTML | `server/index.js` |
 | 殭屍清除 | 超過 2 分鐘沒回報的裝置會被移除 | `server/index.js`（`setInterval`） |
+| **定位權限修正** | **移除 WebRTC 對 `ACCESS_FINE_LOCATION` 的版本限制（見下方踩雷紀錄）** | `app/plugins/withFineLocationFix.js`（app.json plugins 已掛上） |
+
+---
+
+## 踩雷紀錄：`withFineLocationFix.js` 
+
+**症狀**：Android 12+ 定位永遠 coarse（±2000m）、點不會動、設定沒有「精確位置」開關（Google 地圖卻準）。
+
+**原因**：語音相依的 `@cloudflare/react-native-webrtc` 把 `ACCESS_FINE_LOCATION` 宣告成 `maxSdkVersion="30"`（只在 Android 11 以下有效），打包合併後把精確定位一起關掉。與 expo-location 無關，改 app.json / 重裝 / 手機設定都無效。
+
+**解法**：`app/plugins/withFineLocationFix.js`（已掛在 app.json plugins）在打包時加 `tools:remove="android:maxSdkVersion"`，移除該限制。**升級語音套件後要保留它**，否則會被塞回來。
 
 ---
 
@@ -158,6 +169,7 @@ eas build -p android --profile preview
 | 地圖是空白 / 灰色 | 多半是手機連不到網路、或圖磚一時載不出來。確認手機有網路後重開 App。 |
 | 只看到自己、看不到別人 | 另一台手機的 App 沒開、沒給定位權限、或填的 ngrok 網址不一樣。 |
 | 定位一直 ±100m 以上不準 | 手機定位模式只用網路。Android 會跳「開啟高精準度定位」對話框，請允許並到戶外。 |
+| Android 12+ 定位永遠 ±2000m / coarse / 不會動 / 沒有精確位置開關 | WebRTC 套件把 `ACCESS_FINE_LOCATION` 限成 `maxSdkVersion=30`。**詳見上方「踩雷紀錄」**，需保留 `withFineLocationFix.js` 並重新打包。 |
 | 語音橫條卡在「token 取得失敗」 | `server/.env` 的 Cloudflare 設定缺漏或 preset 名稱錯。不影響位置與私訊。 |
 | 語音聽不到對方 | 確認雙方都點過開麥、都給了麥克風權限；用 `/voice` 監控台對照測試。 |
 | ngrok 每次網址都變 | 免費版重開就換網址，換了要重填 `app/.env` 重新打包。測試期可接受。 |
